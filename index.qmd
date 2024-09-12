@@ -59,7 +59,7 @@ Start by filling in the following table for the numbers 1:30 manually, to get a 
 
 On paper or using a tool such as <https://excalidraw.com>, create a program flow map for the sequence of if-statements you need to evaluate for fizzbuzz. Add the picture to the folder containing this file, and name the picture flowchart.png. Add the picture to Git and commit/push your changes.
 
-![Program Flow map for FizzBuzz](flowchart.png)
+![Program Flow map for FizzBuzz](flowmap.png)
 
 In the chunk below, write code which will solve this problem for a single value `x`. You should be able to change the value of x at the top of the chunk and still get the correct answer.
 
@@ -78,10 +78,18 @@ if (x%%15==0) {
 ```
 
 ```{python solo-fizzbuzz-py, echo = T}
-x = 3
+x = 31
 
 # FizzBuzz code goes here
-
+if x % 15 == 0:
+  print("FizzBuzz")
+elif x % 5== 0:
+  print("Buzz")
+elif x % 3== 0:
+  print("Fizz")
+else:
+  print(x)
+  
 ```
 
 Modify the code above so that the result is stored in a value `y`.
@@ -106,11 +114,18 @@ print(paste("For x = ", x, " my code produces ", y, sep = ""))
 
 ```{python solo-fizzbuzz-stored-py, echo = T}
 import numpy as np
-x = 3
+x = 15
 y = np.nan
 # FizzBuzz code goes here
 
-
+if x%15==0:
+  y= "FizzBuzz"
+elif x%5==0: 
+  y = "Buzz"
+elif x%3==0:
+  y = "Fizz"
+else:
+  y = x
 
 print("For x = "+ str(x)+ " my code produces "+ str(y))
 ```
@@ -151,6 +166,15 @@ xx = np.array(range(30)) + 1
 yy = [np.nan]*30
 
 # FizzBuzz code goes here
+for i in range(len(xx)):
+  if xx[i] %15==0: 
+    yy[i] = "FizzBuzz"
+  elif xx[i]%5==0:
+    yy[i] = "Buzz"
+  elif xx[i]%3==0:
+    yy[i] = "Fizz"
+  else:
+    yy[i] = xx[i]
 
 
 # Printing the results in a data frame
@@ -193,11 +217,24 @@ res
 import pandas as pd
 from random import choices
 xx = np.array(choices(range(100), k = 10)) + 1
-
+# xx =3
 
 def fizzbuzz(x):
+  if np.isscalar(x):
+        x = np.array([x])
   y = [np.nan]*len(x) # this just defines something to return
   # Your code goes here
+  for i in range(len(x)):
+    if x[i] %15==0: 
+      y[i] = "FizzBuzz"
+    elif x[i]%5==0:
+      y[i] = "Buzz"
+    elif x[i]%3==0:
+      y[i] = "Fizz"
+    else:
+      y[i] = x[i]
+
+  
   return y
 
 yy = fizzbuzz(x = xx)
@@ -221,7 +258,7 @@ In Python, you can use a [`try:` statement with a `except:` clause](https://docs
 
 ```{python tryexceptdemo, error = T}
 try: 
-  int("hello")
+  int(32)
 except ValueError: 
   print("Error: could not turn value into an integer")
 
@@ -230,7 +267,8 @@ except ValueError:
 See more examples of this in the [Input Validation](https://srvanderplas.github.io/stat-computing-r-python/part-gen-prog/05-functions.html#input-validation) section of the textbook.
 
 ```{r function-error-fizzbuzz-r}
-xx <- sample(1:100, 10) # get a random xx
+ xx <- sample(1:100, 10) # get a random xx
+# xx<-c(1,2,"crazy")
 yy <- rep(NA, 10)
 
 fizzbuzz <- function(x) {
@@ -238,7 +276,8 @@ fizzbuzz <- function(x) {
   y<-c()
   # Your code goes here
 for (i in 1: length(xx)){
-  stopifnot(class(xx[i]) %in% c("integer", "numeric"))
+  # if expression is FALSE, the string (in this case "There is a non numeric entry   # ...) is used as part of the error message
+  stopifnot("There is a non numeric entry in the input vector!" = class(xx[i]) %in%   c("integer", "numeric"))
   if (x[i]%%15==0) {
   y[i] <- "FizzBuzz"
 } else if (x[i]%%5==0) {
@@ -264,13 +303,31 @@ res
 import pandas as pd
 from random import choices
 xx = np.array(choices(range(100), k = 10)) + 1
-
+# xx = (1,3,5,"crazy",7)
+# xx = 1
 
 def fizzbuzz(x):
+  if np.isscalar(x):
+        x = np.array([x])
   y = [np.nan]*len(x) # this just defines something to return
+  
   # Your code goes here
+  for i in range(len(x)):
+    try: 
+      value = int(x[i]) 
+    except ValueError:
+      print(f"Error: '{x[i]}', the {i+1}th element is not a valid integer")
+      continue
+    
+    if value %15==0: 
+      y[i] = "FizzBuzz"
+    elif value %5==0:
+      y[i] = "Buzz"
+    elif value %3==0:
+      y[i] = "Fizz"
+    else:
+      y[i] = value
   return y
-
 yy = fizzbuzz(x = xx)
 
 # Printing the results in a data frame
